@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Radar maker</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>
+	<script>
+		RADAR = {};
+		RADAR.presets = [
+			{
+				'name': 'Lead Profiling ~ by David King',
+				'title': 'PROJECT - Lead Profile',
+				'color': 'CC3366',
+				'data': [
+					{ 'value': 3 , 'label': 'Safe Returns' },
+					{ 'value': 3 , 'label': 'High Returns' },
+					{ 'value': 3 , 'label': 'Quick Returns' },
+					{ 'value': 3 , 'label': 'Low Input' },
+					{ 'value': 3 , 'label': 'Further Work' },
+					{ 'value': 3 , 'label': 'Likelyhood' }
+				]
+			},
+			{
+				'name': 'Magic 35 Qualification Toolkit ~ by Richard Lane',
+				'title': 'PROJECT - Magic 35 Qualification',
+				'color': '654321',
+				'data': [
+					{ 'value': 3 , 'label': 'Budget' },
+					{ 'value': 3 , 'label': 'Defined Need' },
+					{ 'value': 3 , 'label': 'Decision Maker' },
+					{ 'value': 3 , 'label': 'Decision Criteria' },
+					{ 'value': 3 , 'label': 'Compelling Event' },
+					{ 'value': 3 , 'label': 'Timescales' },
+					{ 'value': 3 , 'label': 'Competition' }
+				]
+			},
+			{
+				'name': 'Custom - 3 legs',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 4 columns',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 5 values',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 6 doodahs',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 7 spokes',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 8 points',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 9 nodes',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			},
+			{
+				'name': 'Custom - 10 thingies',
+				'title': '',
+				'color': '123456',
+				'data': [
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' },
+					{ 'value': 3 , 'label': '' }
+				]
+			}
+		];
+		RADAR.render = function(){
+			// Assemble the data
+			var title = encodeURI($('.title').val());
+			var color = $('.color').val();
+			var labels = [];
+			$.each($('.label'), function(k,v){
+				labels.push(encodeURI($(this).val()));
+			});
+			labels = labels.join('|');
+			var values = [];
+			$.each($('.value'), function(k,v){
+				values.push($(this).val() * 20); // We use 0-5, but google uses 0-100
+			});
+			values.push(values[0]); // Must join back up!
+			values = values.join(',');
+			// Build the URL (done in parts for the joy of rendering)
+			var base = 'https://chart.googleapis.com/chart?cht=r&';
+			var parts = [
+				'chs=400x400',
+				'chtt=' + title,
+				'chxl=1:|' + labels,
+				'chd=t:' + values,
+				'chxt=y,x',
+				'chls=2',
+				'chco=' + color + '',
+				'chts=000000,18',
+				'chxr=0,0.0,5.0',
+				'chxp=0,0,1,2,3,4,5',
+				'chxs=0,000000,12|1,000000,12',
+				'chm=o,' + color + ',0,-1,8'
+			];
+			// Update the IMAGE and PRE's
+			$('img').attr('src', base + parts.join('&'));
+			$('#compact').text(base + parts.join('&'));
+			$('#verbose').text(base + '\n' + parts.join('\n&'));
+		};
+		// When yer ready!
+		$(document).ready(function(e){
+			// Setup the presets dropdown
+			$('select').empty();
+			$.each(RADAR.presets, function(k,v){
+				$('select').append($("<option></option>").attr("value",k).text(v.name)); 
+			});
+			// When we select a preset...
+			$('select').change(function(e){
+				var preset = RADAR.presets[$(this).val()];
+				// Tweak the "form"
+				$('#form').empty();
+				// Add the title and color
+				$('#form').append('<div><input class="title" type="text" placeholder="title" value="' + preset.title + '" />&lt; Title</div>');
++				$('#form').append('<div><input class="color" type="text" value="' + preset.color + '" />&lt; Colour</div>');
+				// And the options
+				$.each(preset.data, function(k, v){
+					$('#form').append('<div><input class="label" type="text" placeholder="label" value="' + v.label + '" /><input class="value" type="range" min="0" max="5" value="' + v.value + '" /></div>');
+				});
+				// And render
+				RADAR.render();
+			});
+			// Trigger a preset selection
+			$('select').change();
+			// When anything changes re-render
+			$('input').live('change', function(e){ RADAR.render(); });
+			$('input').live('keyup', function(e){ RADAR.render(); });
+		});
+	</script>
+	<style>
+		h1 {text-align: center; font-style: italic;}
+		#container {width: 810px; padding: 10px; margin: 0 auto; background: #EEEEEE;}
+		#presets {}
+		#input {width: 400px; float: left;}
+		#output {width: 400px; float: right;}
+		#output pre {overflow: auto;}
+		#footer {clear: both; text-align: center; padding: 20px;}
+	</style>
+</head>
+<body>
+	<!-- Everything -->
+	<div id="container">
+		<!-- Introduce -->
+		<h1>oodavid! what a nice radar maker that is...</h1>
+		<p>Dead simple, pick a radar type on the left, fill out the form and get yourself a radar. BAM</p>
+		<!-- Input -->
+		<div id="input">
+			<!-- Presets -->
+			<div id="presets">
+				<h2>1 - pick a preset...</h2>
+				<span>Presets</span>
+				<select>
+					<option>loading...</option>
+				</select>
+			</div>
+			<!-- The form (populated by javascript) -->
+			<h2>2 - fill in the fields...</h2>
+			<div id="form"></div>
+		</div>
+		<!-- Output -->
+		<div id="output">
+			<h2>3 - enjoy your radar</h2>
+			<img src="https://chart.googleapis.com/chart?cht=r&chs=400x400&chtt=I'm%20loading...&chxl=1:|I'm%20loading...|I'm%20loading...|I'm%20loading...&chd=t:80,60,60,80&chxt=y,x&chls=2&chco=CC3366&chts=000000,18&chxr=0,0.0,5.0&chxp=0,0,1,2,3,4,5&chxs=0,000000,12|1,000000,12&chm=o,CC3366,0,-1,8" width="400" height="400" />
+			<h2>The image URL - cheers google!</h2>
+			<pre id="compact">https://chart.googleapis.com/chart?cht=r&chs=400x400&chtt=I'm%20loading...&chxl=1:|I'm%20loading...|I'm%20loading...|I'm%20loading...&chd=t:80,60,60,80&chxt=y,x&chls=2&chco=CC3366&chts=000000,18&chxr=0,0.0,5.0&chxp=0,0,1,2,3,4,5&chxs=0,000000,12|1,000000,12&chm=o,CC3366,0,-1,8</pre>
+			<h2>A touch more readable</h2>
+			<pre id="verbose">https://chart.googleapis.com/chart?cht=r&chs=400x400&chtt=I'm%20loading...&chxl=1:|I'm%20loading...|I'm%20loading...|I'm%20loading...&chd=t:80,60,60,80&chxt=y,x&chls=2&chco=CC3366&chts=000000,18&chxr=0,0.0,5.0&chxp=0,0,1,2,3,4,5&chxs=0,000000,12|1,000000,12&chm=o,CC3366,0,-1,8</pre>
+		</div>
+		<!-- Footer -->
+		<div id="footer">
+			<p>Hurray for data! Made in 53 minutes by <a href="http://oodavid.comftp">oodavid</a></p>
+		</div>
+	</div>
+</body>
+</html>
