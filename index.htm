@@ -9,6 +9,7 @@
 		RADAR.presets = [
 			{
 				'name': 'Lead Profiling ~ by David King',
+				'info': 'Concept by David King to help you profile leads before you act on them. Enjoy!',
 				'title': 'PROJECT - Lead Profile',
 				'color': 'CC3366',
 				'data': [
@@ -22,6 +23,7 @@
 			},
 			{
 				'name': 'Magic 35 Qualification Toolkit ~ by Richard Lane',
+				'info': 'Original concept by <a href="http://www.durhamlane.co.uk/">durhamLane</a>, this tool is for personal use only and no copying or unauthorised sharing etc.',
 				'title': 'PROJECT - Magic 35 Qualification',
 				'color': '654321',
 				'data': [
@@ -189,11 +191,13 @@
 			// When we select a preset...
 			$('select').change(function(e){
 				var preset = RADAR.presets[$(this).val()];
+				// Set the info (if we have it)
+				$('#info').html(preset.info || '');
 				// Tweak the "form"
 				$('#form').empty();
 				// Add the title and color
 				$('#form').append('<div><input class="title" type="text" placeholder="title" value="' + preset.title + '" />&lt; Title</div>');
-+				$('#form').append('<div><input class="color" type="text" value="' + preset.color + '" />&lt; Colour</div>');
+				$('#form').append('<div><input class="color" type="text" value="' + preset.color + '" />&lt; Colour</div>');
 				// And the options
 				$.each(preset.data, function(k, v){
 					$('#form').append('<div><input class="label" type="text" placeholder="label" value="' + v.label + '" /><input class="value" type="range" min="0" max="5" value="' + v.value + '" /></div>');
@@ -233,6 +237,7 @@
 				<select>
 					<option>loading...</option>
 				</select>
+				<p id="info"></p>
 			</div>
 			<!-- The form (populated by javascript) -->
 			<h2>2 - fill in the fields...</h2>
